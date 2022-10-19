@@ -44,18 +44,73 @@ namespace First_App.Controllers
 
         }
 
-        public string Calc([FromQuery] int? age, [FromQuery] string name)
+        //public string Calc([FromQuery] int? age, [FromQuery] string name)
+        //{
+        //    if (age != null)
+        //    {
+        //        int currentYear = DateTime.Now.Year;
+        //        return $"Hello {name}, your birth year is {currentYear - age}.";
+        //    }
+        //    else
+        //    {
+        //        Response.StatusCode = 400;
+        //        return "";
+        //    }
+        //}
+        public IActionResult Birth([FromQuery] int? age, [FromQuery] string name)
         {
             if (age != null)
             {
                 int currentYear = DateTime.Now.Year;
-                return $"Hello {name}, your birth year is {currentYear - age}.";
+                string message = $"Hello {name}, your birth year is {currentYear - age}.";
+                ViewBag.message = message;
             }
             else
             {
+                ViewBag.message = "Can't calc your birth year";
                 Response.StatusCode = 400;
-                return "";
             }
+            return View();
+        }
+
+        public IActionResult BirthForm()
+        {
+            return View();
+        }
+
+        //public IActionResult CalcForm() => View();
+        public IActionResult Calc([FromQuery] double? a, [FromQuery] double? b, [FromQuery] string o, [FromQuery] string ans)
+        {
+            if (a == null || b == null) return View();
+            double? r = 0;
+            try
+            {
+                switch (o)
+                {
+                    case "+":
+                        r = a + b;
+                        break;
+                    case "-":
+                        r = a - b;
+                        break;
+                    case "/":
+                        if (b == 0) throw new DivideByZeroException();
+                        r = a / b;
+                        break;
+                    case "*":
+                        r = a * b;
+                        break;
+                    case "^":
+                        r = Math.Pow((double)a, (double)b);
+                        break;
+                }
+                ViewBag.equals = $"{ans}\n{a}{o}{b}={r}"; // nie działa łamanie lini
+            }
+            catch
+            {
+                ViewBag.equals = "error";
+            }
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
