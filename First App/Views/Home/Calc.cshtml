@@ -15,6 +15,16 @@
     </select>
 
     <button type="submit">Wyślij</button>
-    <input type="hidden" name="ans" value=@ViewBag.equals/>
+    <input type="hidden" name="ans" value=@ViewBag.equals />
 </form>
-<p>@ViewBag.equals</p>
+@{
+    try
+    {
+        string[] ans = ViewBag.equals.Split("|");
+        foreach (string answer in ans)
+        {
+            <p>@answer</p>
+        }
+    }
+    catch { }
+}

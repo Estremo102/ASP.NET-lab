@@ -104,7 +104,7 @@ namespace First_App.Controllers
                         r = Math.Pow((double)a, (double)b);
                         break;
                 }
-                ViewBag.equals = $"{ans}\n{a}{o}{b}={r}"; // nie działa łamanie lini
+                ViewBag.equals = $"{ans}|{a}{o}{b}={r}";
             }
             catch
             {
