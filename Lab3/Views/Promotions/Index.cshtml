@@ -1,0 +1,23 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model List<PromotionModel>
+@{
+    @if(Model!=null)
+    {
+
+    <table class="table">
+        @foreach (PromotionModel promotion in @Model)
+        {
+            <tr>
+                <td>@promotion.GameName</td>
+                <td>@promotion.RegularPrice</td>
+                <td>-@promotion.Discount%</td>
+                <td>@promotion.PriceOnSale</td>
+            </tr>
+        }
+    </table>
+    }else{
+        <div>brak promocji</div>
+    }
+}
