@@ -3,21 +3,26 @@
 *@
 @model List<PromotionModel>
 @{
-    @if(Model!=null)
+
+    <a class="nav-link text-dark" asp-area="" asp-controller="Promotions" asp-action="PromotionForm">Dodaj</a>
+
+    @if (Model != null)
     {
 
-    <table class="table">
-        @foreach (PromotionModel promotion in @Model)
-        {
-            <tr>
-                <td>@promotion.GameName</td>
-                <td>@promotion.RegularPrice</td>
-                <td>-@promotion.Discount%</td>
-                <td>@promotion.PriceOnSale</td>
-            </tr>
-        }
-    </table>
-    }else{
+        <table class="table">
+            @foreach (PromotionModel promotion in @Model)
+            {
+                <tr>
+                    <td>@promotion.GameName</td>
+                    <td>@promotion.RegularPrice</td>
+                    <td>-@promotion.Discount%</td>
+                    <td>@promotion.PriceOnSale</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
         <div>brak promocji</div>
     }
 }
