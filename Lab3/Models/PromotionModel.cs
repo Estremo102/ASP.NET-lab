@@ -15,7 +15,7 @@ namespace Lab3.Models
             Discount = discount;
             StartOfPromotion = DateTime.Now;
             EndOfPromotion = endOfPromotion;
-            PriceOnSale = RegularPrice / 100 * Discount;
+            //PriceOnSale = RegularPrice / 100 * Discount;
         }
 
         public PromotionModel(int id, string gameName, string studio, string publisher, decimal regularPrice, int discount, DateTime endOfPromotion, DateTime startOfPromotion)
@@ -24,8 +24,14 @@ namespace Lab3.Models
             StartOfPromotion = startOfPromotion;
         }
 
+        public PromotionModel() 
+        { 
+            if(StartOfPromotion == null)
+                StartOfPromotion = DateTime.Now;
+        }
+
         [HiddenInput]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [Required(ErrorMessage = "Proszę podać nazwę gry!")]
         public string GameName { get; set; }
         [Required(ErrorMessage = "Proszę podać twórców gry!")]
@@ -40,8 +46,8 @@ namespace Lab3.Models
         [DataType(DataType.Date)]
         public DateTime EndOfPromotion { get; set; }
         [DataType(DataType.Date)]
-        public DateTime StartOfPromotion { get; }
+        public DateTime? StartOfPromotion { get; }
         [HiddenInput]
-        public decimal PriceOnSale { get; }
+        public decimal PriceOnSale { get => RegularPrice / 100 * Discount; }
     }
 }

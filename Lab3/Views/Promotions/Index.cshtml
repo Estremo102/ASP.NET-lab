@@ -4,7 +4,7 @@
 @model List<PromotionModel>
 @{
 
-    <a class="nav-link text-dark" asp-area="" asp-controller="Promotions" asp-action="PromotionForm">Dodaj</a>
+    <a class="btn btn-primary" asp-area="" asp-controller="Promotions" asp-action="PromotionForm">Dodaj</a>
 
     @if (Model != null)
     {
@@ -17,6 +17,13 @@
                     <td>@promotion.RegularPrice</td>
                     <td>-@promotion.Discount%</td>
                     <td>@promotion.PriceOnSale</td>
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@promotion.Id" class=" btn btn-danger">zakończ promocję</a>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@promotion.Id" class=" btn btn-primary">edytuj</a>
+                    </td>
+
                 </tr>
             }
         </table>

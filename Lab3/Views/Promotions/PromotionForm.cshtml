@@ -1,6 +1,60 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Lab3.Models.PromotionModel
 @{
-    
+
 }
+<form asp-controller="Promotions" asp-action="PromotionForm" method="post">
+    <div>
+        <label asp-for="GameName"> Nazwa Gry:</label>
+        <div>
+            <span asp-validation-for="GameName" class="text-danger"></span>
+        </div>
+        <input asp-for="GameName" />
+    </div>
+    <div>
+        <label asp-for="Studio"> Studio:</label>
+        <div>
+            <span asp-validation-for="Studio" class="text-danger"></span>
+        </div>
+        <input asp-for="Studio" />
+    </div>
+    <div>
+        <label asp-for="Publisher"> Wydawca:</label>
+        <div>
+            <span asp-validation-for="Publisher" class="text-danger"></span>
+        </div>
+        <input asp-for="Publisher" />
+    </div>
+    <div>
+        <label asp-for="RegularPrice"> Cena regularna:</label>
+        <div>
+            <span asp-validation-for="RegularPrice" class="text-danger"></span>
+        </div>
+        <input asp-for="RegularPrice" />
+    </div>
+    <div>
+        <label asp-for="Discount"> Zniżka:</label>
+        <div>
+            <span asp-validation-for="Discount" class="text-danger"></span>
+        </div>
+        <input asp-for="Discount" />
+    </div>
+    <div>
+        <label asp-for="EndOfPromotion"> Koniec promocji:</label>
+        <div>
+            <span asp-validation-for="EndOfPromotion" class="text-danger"></span>
+        </div>
+        <input asp-for="EndOfPromotion" />
+    </div>
+    <div>
+        <label asp-for="StartOfPromotion"> Początek promocji:</label>
+        <div>
+            @*<span asp-validation-for="StartOfPromotion" class="text-danger"></span>*@
+        </div>
+        <input asp-for="StartOfPromotion" />
+    </div>
+    <div>
+        <input asp-for="Id" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Dodaj Promocję</button>
+</form>
