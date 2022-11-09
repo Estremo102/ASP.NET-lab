@@ -5,6 +5,7 @@ namespace Lab3.Controllers
 {
     public class PromotionsController : Controller
     {
+        private static AppDbContext context = new AppDbContext();
         public static List<PromotionModel> promotions = new List<PromotionModel>()
         {
             new PromotionModel(1, "Lorem Ipsum", "Yacoper INC", "ZSHT", 10, 50, new DateTime(2022, 12, 12)),
