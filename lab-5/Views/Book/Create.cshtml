@@ -1,4 +1,4 @@
-﻿@model lab_5.Models.Book;
+﻿@model lab_5.Models.BookViewModel;
 
 @{
     ViewBag.Title = "title";
@@ -10,16 +10,20 @@
     <form asp-action="Create" method="post">
         <div class="mb-3">
             <label asp-for="Title"></label>
-            <input class="form-control" asp-for="Title"/>
+            <input class="form-control" asp-for="Title" />
             <span asp-validation-for="Title"></span>
         </div>
         <div class="mb-3">
             <label asp-for="ReleaseDate"></label>
-            <input class="form-control" asp-for="ReleaseDate"/>
+            <input class="form-control" asp-for="ReleaseDate" />
             <span asp-validation-for="ReleaseDate"></span>
         </div>
         <div class="mb-3">
-            <button class ="btn btn-primary" type="submit">Zapisz zmiany</button>
+            <select asp-for="AuthorsId" class="form-control" asp-
+                    items=@Model.Authors></select>
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary" type="submit">Zapisz zmiany</button>
         </div>
     </form>
 </div>

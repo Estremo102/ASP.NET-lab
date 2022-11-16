@@ -5,33 +5,47 @@
 <div id="books">
     <table class="table">
         <thead>
-        <tr>
-            <th>
-                Tytuł
-            </th>
-            <th>
-                Data wydania
-            </th>
-            <th class="text-end">
-                Operacje
-            </th>
-        </tr>
+            <tr>
+                <th>
+                    Tytuł
+                </th>
+                <th>
+                    Data wydania
+                </th>
+                <th>
+                    Autor
+                </th>
+                <th class="text-end">
+                    Operacje
+                </th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var book in @Model)
-        {
-            <tr>
-                <td>@book.Title</td>
-                <td>@book.ReleaseDate.ToString("dd.MM.yyyy")</td>
-                <td class="text-end">
-                    <a class="btn btn-primary" asp-action="Edit" asp-controller="Book" asp-route-id=@book.Id>Edytuj</a>
-                    <a class="btn btn-secondary" asp-action="Details" asp-controller="Book" asp-route-id=@book.Id>Szczegóły</a>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBookModal" data-bs-id=@book.Id>
-                     Usuń
-                   </button>
-                </td>
-            </tr>
-        }
+            @foreach (var book in @Model)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.ReleaseDate.ToString("dd.MM.yyyy")</td>
+                    <td>
+                        @if (book.Authors is not null)
+                        {
+                            @foreach (var author in book.Authors)
+                            {
+                                <span>
+                                    @author.FirstName @author.LastName
+                                </span>
+                            }
+                        }
+                    </td>
+                    <td class="text-end">
+                        <a class="btn btn-primary" asp-action="Edit" asp-controller="Book" asp-route-id=@book.Id>Edytuj</a>
+                        <a class="btn btn-secondary" asp-action="Details" asp-controller="Book" asp-route-id=@book.Id>Szczegóły</a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBookModal" data-bs-id=@book.Id>
+                            Usuń
+                        </button>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
     <div>
@@ -50,7 +64,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a id="deletingLink" class="btn btn-danger" >Usuń</a>
+                <a id="deletingLink" class="btn btn-danger">Usuń</a>
             </div>
         </div>
     </div>
@@ -59,13 +73,13 @@
     const deleteBookModal = document.getElementById("deleteBookModal");
     if (deleteBookModal) {
         deleteBookModal.addEventListener('show.bs.modal', event => {
-          // Przycisk aktywujący okno modalne.
-          const button = event.relatedTarget
-          // Pobranie danych z atrubutu data-bs-id.
-          const id = button.getAttribute('data-bs-id')
-          // Aktualizacja okna modalnego.
-          const deletingLink = deleteBookModal.querySelector('#deletingLink');
-          deletingLink.href = `/book/delete/${id}`;
+            // Przycisk aktywujący okno modalne.
+            const button = event.relatedTarget
+            // Pobranie danych z atrubutu data-bs-id.
+            const id = button.getAttribute('data-bs-id')
+            // Aktualizacja okna modalnego.
+            const deletingLink = deleteBookModal.querySelector('#deletingLink');
+            deletingLink.href = `/book/delete/${id}`;
         })
-      }
+    }
 </script>

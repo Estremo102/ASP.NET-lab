@@ -15,4 +15,5 @@ public class Book
     [DataType(DataType.Date)]
     public DateTime ReleaseDate { get; set; }
     public DateTime Created { get; set; }
+    public ICollection<Author> Authors { get; set; }
 }
