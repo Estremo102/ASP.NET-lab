@@ -1,0 +1,11 @@
+﻿@model lab_5.Models.Book;
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Sczegóły książki</h2>
+<h3>Tytuł: @Model.Title</h3>
+<h4>Data wydania: @Model.ReleaseDate</h4>
+<h4>Data utworzenia wpisu: @Model.Created</h4>

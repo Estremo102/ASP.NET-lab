@@ -1,0 +1,71 @@
+﻿@model IList<lab_5.Models.Book>
+@{
+}
+
+<div id="books">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                Tytuł
+            </th>
+            <th>
+                Data wydania
+            </th>
+            <th class="text-end">
+                Operacje
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var book in @Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.ReleaseDate.ToString("dd.MM.yyyy")</td>
+                <td class="text-end">
+                    <a class="btn btn-primary" asp-action="Edit" asp-controller="Book" asp-route-id=@book.Id>Edytuj</a>
+                    <a class="btn btn-secondary" asp-action="Details" asp-controller="Book" asp-route-id=@book.Id>Szczegóły</a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBookModal" data-bs-id=@book.Id>
+                     Usuń
+                   </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div>
+        <a class="btn btn-outline-primary" asp-action="Create" asp-controller="Book">Dodaj książkę</a>
+    </div>
+</div>
+<div class="modal fade" id="deleteBookModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Usuwanie książki</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Czy na pewno chcesz usunąć książkę?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="deletingLink" class="btn btn-danger" >Usuń</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const deleteBookModal = document.getElementById("deleteBookModal");
+    if (deleteBookModal) {
+        deleteBookModal.addEventListener('show.bs.modal', event => {
+          // Przycisk aktywujący okno modalne.
+          const button = event.relatedTarget
+          // Pobranie danych z atrubutu data-bs-id.
+          const id = button.getAttribute('data-bs-id')
+          // Aktualizacja okna modalnego.
+          const deletingLink = deleteBookModal.querySelector('#deletingLink');
+          deletingLink.href = `/book/delete/${id}`;
+        })
+      }
+</script>
