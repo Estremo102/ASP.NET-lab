@@ -3,7 +3,7 @@
     public interface IBookService
     {
         public int Save(Book book);
-        public bool Delete(int id);
+        public bool Delete(int? id);
         public bool Update(Book book);
         public Book? FindBy(int? id);
         public ICollection<Book> FindAll();

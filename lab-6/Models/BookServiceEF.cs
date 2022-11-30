@@ -45,13 +45,13 @@ namespace lab_6.Models
         }
 
         public Book? FindBy(int? id) =>
-            throw new NotImplementedException();
+            _context.Books.Where(e => e.Id == id).FirstOrDefault();
 
         public ICollection<Book> FindAll() => 
-            throw new NotImplementedException();
+            _context.Books.Include(e => e.Authors).ToList();
 
         public ICollection<Book> FindByAuthor(Author author) => 
-            throw new NotImplementedException();
+            FindAll().Where(e => e.Authors.Contains(author)).ToList();
 
         public ICollection<Book> FindPage(int page = 0, int size = 10) =>
             _context.Books.Skip(page*size).Take(page).ToHashSet();
