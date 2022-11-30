@@ -6,174 +6,102 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using lab_6.Models;
+using MessagePack;
+using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
 
 namespace lab_6.Controllers
 {
     public class BooksController : Controller
     {
-        private readonly AppDbContext _context;
-
-        public BooksController(AppDbContext context)
+        private readonly IBookService _bookService;
+        private readonly IClockProvider _clock;
+        public BooksController(AppDbContext context,
+            IBookService bookService, IClockProvider clock)
         {
-            _context = context;
+            _bookService = bookService;
+            _clock = clock;
         }
-
-        private List<SelectListItem> GetAllAuthors() =>
-            _context.Authors.Select(a => new SelectListItem()
-            {
-                Value = a.Id.ToString(),
-                Text = $"{a.FirstName} {a.LastName}"
-            }).ToList();
-
-        // GET: Books
-        public async Task<IActionResult> Index(int? id)
+        public IActionResult Index()
         {
-            if (id == null)
-                return View(await _context.Books.Include(b => b.Authors).ToListAsync());
-            return View((await _context.Authors.Include(a => a.Books).FirstOrDefaultAsync(a => id == a.Id)).Books);
+            return View(_bookService.FindAll());
         }
-
-        // GET: Books/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null || _context.Books == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            return View(book);
+            var book = _bookService.FindBy(id);
+            return book is null ? NotFound() : View(book);
         }
-
-        // GET: Books/Create
+        // GET: Book/Create
         public IActionResult Create()
         {
-            BookViewModel model = new BookViewModel();
-            model.AllAuthors = GetAllAuthors();
-            return View(model);
+            return View();
         }
-
-        // POST: Books/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Created,AuthorsId")] BookViewModel book)
+        public IActionResult Create([Bind("Id,Title,ReleaseDate,Created")] Book book)
         {
             if (ModelState.IsValid)
             {
-                Book newBook = book;
-                foreach (var strId in book.AuthorsId)
-                {
-                    if (int.TryParse(strId, out int id))
-                    {
-                        newBook.Authors.Add(_context.Authors.Find(id));
-                    }
-                }
-                _context.Add(newBook);
-                await _context.SaveChangesAsync();
+                _bookService.Save(book);
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
         }
-
-        // GET: Books/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            if (id == null || _context.Books == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context.Books.FindAsync(id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-            return View(book);
+            var book = _bookService.FindBy(id);
+            return book is null ? NotFound() : View(book);
         }
-
-        // POST: Books/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Created")] Book book)
+        public IActionResult Edit(int id, [Bind("Id,Title,ReleaseDate,Created")] Book book)
         {
-            if (id != book.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(book);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BookExists(book.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _bookService.Update(book);
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
         }
-
-        // GET: Books/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Book/Delete/5
+        public IActionResult Delete(int? id)
         {
-            if (id == null || _context.Books == null)
+            if (id == null)
             {
                 return NotFound();
             }
-
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            return View(book);
+            var book = _bookService.FindBy(id);
+            return book is null ? NotFound() : View(book);
         }
-
-        // POST: Books/Delete/5
+        // POST: Book/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            if (_context.Books == null)
+            if (_bookService.Delete(id))
             {
-                return Problem("Entity set 'AppDbContext.Books'  is null.");
+                return RedirectToAction(nameof(Index));
             }
-            var book = await _context.Books.FindAsync(id);
-            if (book != null)
-            {
-                _context.Books.Remove(book);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Problem("Trying delete no existing book");
         }
 
-        private bool BookExists(int id)
+        //public string Age(int? id)
+        //{
+        //    var find = _bookService.FindBy(id);
+        //    return find is null
+        //    ? "Brak takiej książki"
+        //    : $"Wiek książki {DateTime.Now.Year - find.ReleaseDate.Year}";
+        //}
+        ////Jednym z problemów takiej metody jest brak możliwości testowania.Test uruchomiony w bieżącym
+        ////roku zwróci inną wartość niż też uruchomiony w przyszłym roku(wiek książki się zwiększy).
+        ////Bieżąca data powinna być zależnością kontrolera, dlatego korzystamy z IOC i dodajemy pole typu
+        ////IClockProvider w kontrolerze.
+        
+        public string Age(int? id)
         {
-            return _context.Books.Any(e => e.Id == id);
+            var find = _bookService.FindBy(id);
+            return find is null
+            ? "Brak takiej ksiązki"
+            : $"Wiek książki {_clock.Now().Year - find.ReleaseDate.Year}";
         }
     }
 }
