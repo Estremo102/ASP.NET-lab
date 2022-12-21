@@ -23,21 +23,21 @@ namespace lab_8
         // GET api/<BooksController>/5
         [HttpGet("{id}")]
         //public ActionResult<Book> Get(int id) => service.FindBy(id) == null ? NotFound() : Ok(service.FindBy(id));
-        public ActionResult<Book> Get(int id)
+        public ActionResult<Book> Get(int id) //=> service.FindBy(id);
         {
             var book = service.FindBy(id);
             if (book == null)
                 return NotFound();
-            return Ok(book);
-    }
+            return book;
+        }
 
-    // POST api/<BooksController>
-    [HttpPost]
+        // POST api/<BooksController>
+        [HttpPost]
         public ActionResult<Book> Post([FromBody] Book book)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                int id =service.Save(book);
+                int id = service.Save(book);
                 return Created($"/api/books/{id}", book);
             }
             return BadRequest();
